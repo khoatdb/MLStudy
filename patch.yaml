@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    meta.helm.sh/release-name: taikoosocialapigateway-prod
+    meta.helm.sh/release-name: taikoosocialapigateway-staging
     meta.helm.sh/release-namespace: swire-ms-staging
   labels:
     app: taikoosocialapigateway
@@ -10,14 +10,14 @@ metadata:
     chart: taikoosocialapigateway-v0.3.8
     draft: draft-app
     heritage: Helm
-    release: taikoosocialapigateway-prod
+    release: taikoosocialapigateway-staging
   name: taikoosocialapigateway
-  namespace: swire-ms-prod
+  namespace: swire-ms-staging
 spec:
   selector:
     matchLabels:
       app: taikoosocialapigateway
-      release: taikoosocialapigateway-prod
+      release: taikoosocialapigateway-staging
   template:
     metadata:
       annotations:
@@ -25,7 +25,7 @@ spec:
       labels:
         app: taikoosocialapigateway
         draft: draft-app
-        release: taikoosocialapigateway-prod
+        release: taikoosocialapigateway-staging
     spec:
       containers:
       - env:
