@@ -2,22 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    meta.helm.sh/release-name: taikoosocialapigateway-staging
-    meta.helm.sh/release-namespace: swire-ms-staging
+    meta.helm.sh/release-name: taikoosocialapigateway-prod
+    meta.helm.sh/release-namespace: swire-ms-prod
   labels:
     app: taikoosocialapigateway
     app.kubernetes.io/managed-by: Helm
     chart: taikoosocialapigateway-v0.3.8
     draft: draft-app
     heritage: Helm
-    release: taikoosocialapigateway-staging
+    release: taikoosocialapigateway-prod
   name: taikoosocialapigateway
-  namespace: swire-ms-staging
+  namespace: swire-ms-prod
 spec:
   selector:
     matchLabels:
       app: taikoosocialapigateway
-      release: taikoosocialapigateway-staging
+      release: taikoosocialapigateway-prod
   template:
     metadata:
       annotations:
@@ -25,7 +25,7 @@ spec:
       labels:
         app: taikoosocialapigateway
         draft: draft-app
-        release: taikoosocialapigateway-staging
+        release: taikoosocialapigateway-prod
     spec:
       containers:
       - env:
@@ -39,8 +39,8 @@ spec:
             secretKeyRef:
               key: content__mediaServerUrlReplacement__newValue
               name: taikoosocialapigateway-env
-        image: tekcentcr.azurecr.io/taikoosocialapigateway:v0.3.8
-        imagePullPolicy: Never
+        image: sitecorexpcmsstagingacr.azurecr.io/taikoosocialapigateway:v0.3.8
+        imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
           httpGet:
@@ -64,4 +64,4 @@ spec:
             cpu: 250m
             memory: 800Mi
       imagePullSecrets:
-      - name: acr-secret
+      - name: staging-acr-secret
