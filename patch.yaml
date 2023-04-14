@@ -1,10 +1,67 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    meta.helm.sh/release-name: taikoosocialapigateway-prod
+    meta.helm.sh/release-namespace: swire-ms-staging
+  labels:
+    app: taikoosocialapigateway
+    app.kubernetes.io/managed-by: Helm
+    chart: taikoosocialapigateway-v0.3.8
+    draft: draft-app
+    heritage: Helm
+    release: taikoosocialapigateway-prod
   name: taikoosocialapigateway
+  namespace: swire-ms-prod
 spec:
+  selector:
+    matchLabels:
+      app: taikoosocialapigateway
+      release: taikoosocialapigateway-prod
   template:
+    metadata:
+      annotations:
+        buildID: ""
+      labels:
+        app: taikoosocialapigateway
+        draft: draft-app
+        release: taikoosocialapigateway-prod
     spec:
       containers:
-      - name: taikoosocialapigateway
+      - env:
+        - name: ApplicationInsights__InstrumentationKey
+          valueFrom:
+            secretKeyRef:
+              key: ApplicationInsights__InstrumentationKey
+              name: taikoosocialapigateway-env
+        - name: content__mediaServerUrlReplacement__newValue
+          valueFrom:
+            secretKeyRef:
+              key: content__mediaServerUrlReplacement__newValue
+              name: taikoosocialapigateway-env
+        image: tekcentcr.azurecr.io/taikoosocialapigateway:v0.3.8
         imagePullPolicy: Never
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /liveness
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: taikoosocialapigateway
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1200Mi
+          requests:
+            cpu: 250m
+            memory: 800Mi
+      imagePullSecrets:
+      - name: acr-secret
